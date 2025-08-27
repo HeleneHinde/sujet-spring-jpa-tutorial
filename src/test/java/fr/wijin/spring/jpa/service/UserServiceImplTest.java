@@ -67,7 +67,7 @@ class UserServiceImplTest {
 
 	@Test
 	void testDelete() {
-		userService.deleteUser(2);
+		userService.deleteUser(1);
 		User deletedUser = userService.getUserById(2);
 		assertNull(deletedUser);
 		List<User> users = userService.getAllUsers();

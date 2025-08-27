@@ -2,8 +2,11 @@ package fr.wijin.spring.jpa.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import fr.wijin.spring.jpa.model.User;
 
+@Service
 public interface UserService {
 
 	/**
@@ -43,6 +46,6 @@ public interface UserService {
 	 * 
 	 * @param id the id of the user
 	 */
-	void deleteUser(Integer id);
+	void deleteUser(Integer id) throws Exception;
 
 }

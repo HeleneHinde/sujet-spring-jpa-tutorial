@@ -1,13 +1,13 @@
 package fr.wijin.spring.jpa.repository;
 
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import fr.wijin.spring.jpa.model.User;
 
-// TODO
-public interface UserRepository {
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer>{
 
 	/**
 	 * Get a user by username
@@ -25,13 +25,5 @@ public interface UserRepository {
 	 * @return the user
 	 */
 	User findByUsernameAndPassword(String username, String password);
-
-	Optional<User> findById(int i);
-
-	List<User> findAll();
-
-	void save(User user);
-
-	void delete(User user);
 
 }
