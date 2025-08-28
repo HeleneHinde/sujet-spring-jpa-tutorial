@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import fr.wijin.spring.jpa.model.Order;
 import fr.wijin.spring.jpa.repository.OrderRepository;
 import fr.wijin.spring.jpa.service.OrderService;
+import jakarta.transaction.Transactional;
 
+@Transactional
 @Service
 public class OrderServiceImpl implements OrderService{
 
@@ -33,8 +35,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order updateOrder(Order order) throws Exception {
-		logger.debug("attempting to update customer {}...", order.getId());
-		Order orderExistant = orderRepository.findById(order.getId()).orElseThrow(Exception::new);
+		logger.debug("attempting to update order {}...", order.getId());
+		Order orderExistant = this.getOrderById(order.getId());
 		orderExistant.setLabel(order.getLabel());
 		orderExistant.setAdrEt(order.getAdrEt());
 		orderExistant.setNumberOfDays(order.getNumberOfDays());
@@ -42,7 +44,6 @@ public class OrderServiceImpl implements OrderService{
 		orderExistant.setStatus(order.getStatus());
 		orderExistant.setType(order.getType());
 		orderExistant.setNotes(order.getNotes());
-        orderExistant.setCustomer(order.getCustomer());
 		return orderRepository.save(orderExistant);
     }
 

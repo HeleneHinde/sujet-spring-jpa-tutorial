@@ -1,25 +1,23 @@
 package fr.wijin.spring.jpa.service;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import fr.wijin.spring.jpa.config.AppConfig;
 import fr.wijin.spring.jpa.model.User;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppConfig.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = { AppConfig.class })
 @DirtiesContext
 class UserServiceImplTest {
 
@@ -51,7 +49,7 @@ class UserServiceImplTest {
 	@Test
 	void testUpdate() {
 		User user = new User();
-		user.setId(Integer.valueOf(1));
+		user.setId(Integer.valueOf(2));
 		user.setMail("mailmodifie@test.fr");
 		try {
 			userService.updateUser(user);
@@ -59,7 +57,7 @@ class UserServiceImplTest {
 			fail();
 		}
 
-		User modifiedUser = userService.getUserById(1);
+		User modifiedUser = userService.getUserById(2);
 		assertEquals("mailmodifie@test.fr", modifiedUser.getMail());
 		List<User> users = userService.getAllUsers();
 		System.out.println("Nombre de users : " + users.size());
@@ -68,7 +66,7 @@ class UserServiceImplTest {
 	@Test
 	void testDelete() {
 		userService.deleteUser(1);
-		User deletedUser = userService.getUserById(2);
+		User deletedUser = userService.getUserById(1);
 		assertNull(deletedUser);
 		List<User> users = userService.getAllUsers();
 		System.out.println("Nombre de users : " + users.size());

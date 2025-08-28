@@ -46,6 +46,6 @@ public interface UserService {
 	 * 
 	 * @param id the id of the user
 	 */
-	void deleteUser(Integer id) throws Exception;
+	void deleteUser(Integer id);
 
 }

@@ -1,6 +1,7 @@
 package fr.wijin.spring.jpa.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import fr.wijin.spring.jpa.model.User;
 import fr.wijin.spring.jpa.repository.UserRepository;
 import fr.wijin.spring.jpa.service.UserService;
+import jakarta.transaction.Transactional;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -26,7 +29,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserById(Integer id) {
-        return userRepository.getReferenceById(id);
+		Optional<User> user = userRepository.findById(id);
+		return user.isEmpty() ? null : user.get();
     }
 
     @Override
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User updateUser(User user) throws Exception {
        	logger.debug("attempting to update customer {}...", user.getId());
-		User userExistant = userRepository.findById(user.getId()).orElseThrow(Exception::new);
+		User userExistant = this.getUserById(user.getId());
 		userExistant.setUsername(user.getUsername());
 		userExistant.setPassword(user.getPassword());
 		userExistant.setMail(user.getMail());

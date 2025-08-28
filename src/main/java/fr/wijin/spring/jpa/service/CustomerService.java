@@ -75,4 +75,6 @@ public interface CustomerService {
 	 * @throws Exception
 	 */
 	void patchCustomerStatus(Integer customerId, boolean active) throws Exception;
+
+	public List<Customer> searchCustomer(String lastname, String firstname, String phone);
 }

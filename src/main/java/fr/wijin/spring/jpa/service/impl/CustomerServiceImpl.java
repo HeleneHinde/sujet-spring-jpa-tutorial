@@ -6,6 +6,11 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +18,7 @@ import fr.wijin.spring.jpa.model.Customer;
 import fr.wijin.spring.jpa.repository.CustomerRepository;
 import fr.wijin.spring.jpa.service.CustomerService;
 
+@Transactional
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -122,6 +128,44 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer existingCustomer = customerRepository.findById(customerId).orElseThrow(Exception::new);
 		existingCustomer.setActive(active);
 		customerRepository.save(existingCustomer);
+	}
+
+	@Override
+	public List<Customer> searchCustomer(String lastname, String firstname, String phone) {
+
+		Specification<Customer> specLastname = (root, criteriaQuery, criteriaBuilder) -> 
+				criteriaBuilder.equal(root.get("lastname"), lastname);
+
+		Specification<Customer> specFirstname = (root, criteriaQuery, criteriaBuilder) -> 
+				criteriaBuilder.equal(root.get("firstname"), firstname);
+
+
+		Specification<Customer> specPhone = (root, criteriaQuery, criteriaBuilder) -> 
+				criteriaBuilder.equal(root.get("phone"), phone);
+
+		Specification<Customer> recherche = null;
+		if(lastname != null){
+			recherche = recherche == null ? specLastname : recherche.and(specLastname);
+		}
+		if(firstname != null){
+			recherche = recherche == null ? specFirstname : recherche.and(specFirstname);
+		}
+		if(phone != null){
+			recherche = recherche == null ? specPhone : recherche.and(specPhone);
+		}
+
+		Sort sort = Sort.by("lastname");
+		sort = sort.ascending();
+		sort = sort.and(Sort.by("firstname").descending());
+		Pageable pageable = PageRequest.of(0, 10, sort);
+
+		Page<Customer> page = customerRepository.findAll(recherche, pageable);
+		long nbCustomers = page.getTotalElements();
+		int nbPages = page.getTotalPages();
+		logger.info("Nombre de clients trouvés : {}, Nombre de pages : {}", nbCustomers, nbPages);
+
+		return page.getContent();
+
 	}
 
 }
